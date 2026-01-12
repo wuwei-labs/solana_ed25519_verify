@@ -1,6 +1,6 @@
 [package]
 name = "solana_ed25519_verify"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "A helper library for verifying signatures in a Solana program without CPIs or the Ed25519 precompile program"
 authors = ["Sammy Harris <sammy@stegabob.com>"]
@@ -10,12 +10,12 @@ repository = "https://github.com/stegabob/solana_ed25519_verify"
 [dependencies]
 anyhow = "1"
 arrayref = "0.3"
-curve25519-dalek = { version = "4" }
+curve25519-dalek = "4.1"
 sha2 = "0.10"
-solana-zk-token-sdk = "1.18"
-solana-program = "1.18"
+solana-curve25519 = "4.0"
+solana-pubkey = "4.0"
 getrandom = { version = "0.1", features = ["dummy"] }
 
 
 [dev-dependencies]
-solana-sdk = "1.18"
+solana-sdk = "3.0"

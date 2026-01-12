@@ -2,11 +2,11 @@ use anyhow::{bail, Context};
 use arrayref::array_ref;
 use curve25519_dalek::scalar::Scalar;
 use sha2::Digest;
-use solana_program::pubkey::Pubkey;
-use solana_zk_token_sdk::curve25519::{
+use solana_curve25519::{
     edwards::{multiply_edwards, subtract_edwards, validate_edwards, PodEdwardsPoint},
     scalar::PodScalar,
 };
+use solana_pubkey::Pubkey;
 
 // funny number
 const EDWARDS_BASE_POINT: PodEdwardsPoint = PodEdwardsPoint([
@@ -59,7 +59,8 @@ mod tests {
         let keypair = Keypair::new();
         let bytes_to_sign = b"Hello World! More bytes and stuff...";
         let signature = keypair.sign_message(bytes_to_sign);
-        let verify = verify_signature(&keypair.pubkey(), &signature.into(), bytes_to_sign)?;
+        let pubkey = Pubkey::from(keypair.pubkey().to_bytes());
+        let verify = verify_signature(&pubkey, &signature.into(), bytes_to_sign)?;
         assert!(verify);
         Ok(())
     }
@@ -70,7 +71,8 @@ mod tests {
         let bytes_to_sign = b"Hello World! More bytes and stuff...";
         let signature = keypair.sign_message(bytes_to_sign);
         let wrong_bytes = b"Hello World! These are not the bytes you are looking for...";
-        let verify = verify_signature(&keypair.pubkey(), &signature.into(), wrong_bytes)?;
+        let pubkey = Pubkey::from(keypair.pubkey().to_bytes());
+        let verify = verify_signature(&pubkey, &signature.into(), wrong_bytes)?;
         assert!(!verify);
         Ok(())
     }
