@@ -10,7 +10,6 @@ repository = "https://github.com/stegabob/solana_ed25519_verify"
 [dependencies]
 anyhow = "1"
 arrayref = "0.3"
-curve25519-dalek = { version = "4.1", default-features = false, features = ["zeroize"] }
 sha2 = "0.10"
 solana-curve25519 = "4.0"
 solana-pubkey = "4.0"

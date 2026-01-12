@@ -1816,7 +1816,6 @@ version = "0.2.0"
 dependencies = [
  "anyhow",
  "arrayref",
- "curve25519-dalek",
  "getrandom 0.1.16",
  "sha2",
  "solana-curve25519",

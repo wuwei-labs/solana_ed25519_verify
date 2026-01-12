@@ -1,6 +1,7 @@
+mod scalar;
+
 use anyhow::{bail, Context};
 use arrayref::array_ref;
-use curve25519_dalek::scalar::Scalar;
 use sha2::Digest;
 use solana_curve25519::{
     edwards::{multiply_edwards, subtract_edwards, validate_edwards, PodEdwardsPoint},
@@ -29,8 +30,7 @@ pub fn verify_signature(
     }
 
     let s = array_ref![signature, 32, 32];
-    let s_scalar = Scalar::from_bytes_mod_order(*s);
-    let s_scalar = PodScalar(s_scalar.to_bytes());
+    let s_scalar = PodScalar(scalar::sc_reduce32(s));
 
     let mut hasher = sha2::Sha512::new();
     // R || A || M
@@ -39,8 +39,7 @@ pub fn verify_signature(
     hasher.update(message);
     let hash_bytes = hasher.finalize();
     let hash_array = array_ref![hash_bytes, 0, 64];
-    let h_scalar = Scalar::from_bytes_mod_order_wide(hash_array);
-    let h_scalar = PodScalar(h_scalar.to_bytes());
+    let h_scalar = PodScalar(scalar::sc_reduce(hash_array));
 
     let s_b = multiply_edwards(&s_scalar, &EDWARDS_BASE_POINT).context("Failed to multiply S*B")?;
     let h_a = multiply_edwards(&h_scalar, &a).context("Failed to multiply H*A")?;
