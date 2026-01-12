@@ -11,10 +11,16 @@ repository = "https://github.com/stegabob/solana_ed25519_verify"
 anyhow = "1"
 arrayref = "0.3"
 sha2 = "0.10"
-solana-curve25519 = "4.0"
 solana-pubkey = "4.0"
 getrandom = { version = "0.1", features = ["dummy"] }
 
+# Only for native builds (tests) - NOT compiled for BPF
+[target.'cfg(not(target_os = "solana"))'.dependencies]
+curve25519-dalek = { version = "4.1", default-features = false }
 
 [dev-dependencies]
 solana-sdk = "3.0"
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = ['cfg(target_os, values("solana"))']

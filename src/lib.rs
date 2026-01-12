@@ -1,12 +1,10 @@
+mod curve;
 mod scalar;
 
 use anyhow::{bail, Context};
 use arrayref::array_ref;
+use curve::{multiply_edwards, subtract_edwards, validate_edwards, PodEdwardsPoint, PodScalar};
 use sha2::Digest;
-use solana_curve25519::{
-    edwards::{multiply_edwards, subtract_edwards, validate_edwards, PodEdwardsPoint},
-    scalar::PodScalar,
-};
 use solana_pubkey::Pubkey;
 
 // funny number
