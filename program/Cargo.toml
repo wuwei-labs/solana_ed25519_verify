@@ -1,0 +1,18 @@
+[package]
+name = "ed25519-verify-test-program"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+solana-program = "3.0"
+solana_ed25519_verify = { path = ".." }
+
+[features]
+no-entrypoint = []
+
+[lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = ['cfg(target_os, values("solana"))', 'cfg(feature, values("custom-heap", "custom-panic"))']

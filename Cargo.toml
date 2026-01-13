@@ -1,3 +1,6 @@
+[workspace]
+members = ["program"]
+
 [package]
 name = "solana_ed25519_verify"
 version = "0.2.0"
@@ -19,6 +22,9 @@ curve25519-dalek = { version = "4.1", default-features = false }
 
 [dev-dependencies]
 solana-sdk = "3.0"
+solana-program-test = "3.0"
+tokio = { version = "1", features = ["full"] }
+ed25519-verify-test-program = { path = "program", features = ["no-entrypoint"] }
 
 [lints.rust.unexpected_cfgs]
 level = "warn"
