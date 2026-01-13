@@ -1798,7 +1798,6 @@ dependencies = [
  "curve25519-dalek",
  "getrandom 0.1.16",
  "sha2",
- "solana-pubkey 4.0.0",
  "solana-sdk",
 ]
 

@@ -5,7 +5,6 @@ use anyhow::{bail, Context};
 use arrayref::array_ref;
 use curve::{multiply_edwards, subtract_edwards, validate_edwards, PodEdwardsPoint, PodScalar};
 use sha2::Digest;
-use solana_pubkey::Pubkey;
 
 // funny number
 const EDWARDS_BASE_POINT: PodEdwardsPoint = PodEdwardsPoint([
@@ -14,11 +13,11 @@ const EDWARDS_BASE_POINT: PodEdwardsPoint = PodEdwardsPoint([
 ]);
 
 pub fn verify_signature(
-    pubkey: &Pubkey,
+    pubkey: &[u8; 32],
     signature: &[u8; 64],
     message: &[u8],
 ) -> anyhow::Result<bool> {
-    let a = PodEdwardsPoint(pubkey.to_bytes());
+    let a = PodEdwardsPoint(*pubkey);
     let r = PodEdwardsPoint(*array_ref![signature, 0, 32]);
     if !validate_edwards(&a) {
         bail!("Pubkey is not a valid EdwardsPoint")
@@ -56,8 +55,8 @@ mod tests {
         let keypair = Keypair::new();
         let bytes_to_sign = b"Hello World! More bytes and stuff...";
         let signature = keypair.sign_message(bytes_to_sign);
-        let pubkey = Pubkey::from(keypair.pubkey().to_bytes());
-        let verify = verify_signature(&pubkey, &signature.into(), bytes_to_sign)?;
+        let pubkey_bytes = keypair.pubkey().to_bytes();
+        let verify = verify_signature(&pubkey_bytes, &signature.into(), bytes_to_sign)?;
         assert!(verify);
         Ok(())
     }
@@ -68,8 +67,8 @@ mod tests {
         let bytes_to_sign = b"Hello World! More bytes and stuff...";
         let signature = keypair.sign_message(bytes_to_sign);
         let wrong_bytes = b"Hello World! These are not the bytes you are looking for...";
-        let pubkey = Pubkey::from(keypair.pubkey().to_bytes());
-        let verify = verify_signature(&pubkey, &signature.into(), wrong_bytes)?;
+        let pubkey_bytes = keypair.pubkey().to_bytes();
+        let verify = verify_signature(&pubkey_bytes, &signature.into(), wrong_bytes)?;
         assert!(!verify);
         Ok(())
     }
